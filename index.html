@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Criador de Currículo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- FORMULÁRIO -->
+    <div class="formulario">
+
+        <h2>Dados Pessoais</h2>
+
+        <input type="text" id="nome" placeholder="Seu nome completo">
+        <input type="text" id="cargo" placeholder="Cargo desejado">
+        <input type="email" id="email" placeholder="Email">
+        <input type="text" id="telefone" placeholder="Telefone">
+        <textarea id="resumo" placeholder="Resumo profissional"></textarea>
+
+        <label>Foto</label>
+        <input type="file" id="foto" accept="image/*">
+
+        <h2>Experiência</h2>
+        <div id="experienciasForm"></div>
+        <button type="button" onclick="adicionarExperiencia()">+ Adicionar Experiência</button>
+
+        <h2>Habilidades</h2>
+        <div id="habilidadesForm"></div>
+        <button type="button" onclick="adicionarHabilidade()">+ Adicionar Habilidade</button>
+
+        <br><br>
+
+        <button type="button" class="btn-secundario" onclick="gerarCurriculo()">
+            Atualizar Currículo
+        </button>
+
+        <button type="button" class="btn-gerar" onclick="gerarPDF()">
+            Gerar PDF
+        </button>
+
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="preview">
+
+        <div class="foto-container">
+            <img id="previewFoto" class="foto-perfil" style="display:none;">
+            <div id="fotoIcone" class="foto-icone">👤</div>
+        </div>
+
+        <h1 id="previewNome"></h1>
+        <h3 id="previewCargo"></h3>
+
+        <h2>Informações Pessoais</h2>
+        <p id="previewInfoPessoais"></p>
+
+        <h2>Resumo Profissional</h2>
+        <p id="previewResumo"></p>
+
+        <h2>Experiência</h2>
+        <div id="previewExperiencias"></div>
+
+        <h2>Habilidades</h2>
+        <ul id="previewHabilidades"></ul>
+
+    </div>
+
+</div>
+
+<!-- Biblioteca para gerar PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script src="script.js"></script>
+</body>
+</html>
