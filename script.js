@@ -1,4 +1,7 @@
+/* ================= ADICIONAR EXPERIÊNCIA ================= */
+
 function adicionarExperiencia() {
+
     const container = document.getElementById("experienciasForm");
 
     const div = document.createElement("div");
@@ -7,33 +10,54 @@ function adicionarExperiencia() {
     div.innerHTML = `
         <input type="text" class="empresa" placeholder="Nome da empresa">
         <input type="text" class="cargo" placeholder="Cargo">
-        <textarea class="funcao" placeholder="Descrição das atividades"></textarea>
+        <input type="text" class="funcao" placeholder="Função">
 
-        <label><strong>Período</strong></label>
-        <input type="number" class="inicio" placeholder="Ano início">
-        <input type="number" class="fim" placeholder="Ano fim (ou deixe vazio se atual)">
+        <label>Período</label>
 
-        <button type="button" onclick="this.parentElement.remove()">Remover</button>
+        <input 
+            type="text" 
+            class="anoInicio" 
+            placeholder="Ano Início (ex: 2020)"
+            maxlength="4"
+            inputmode="numeric"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+        >
+
+        <input 
+            type="text" 
+            class="anoFim" 
+            placeholder="Ano Fim (ou deixe vazio se atual)"
+            maxlength="4"
+            inputmode="numeric"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+        >
         <hr>
     `;
 
     container.appendChild(div);
 }
 
+
+/* ================= ADICIONAR HABILIDADE ================= */
+
 function adicionarHabilidade() {
+
     const container = document.getElementById("habilidadesForm");
 
-    const div = document.createElement("div");
+    const input = document.createElement("input");
+    input.type = "text";
+    input.classList.add("habilidade-item");
+    input.placeholder = "Digite uma habilidade";
 
-    div.innerHTML = `
-        <input type="text" class="habilidade" placeholder="Habilidade">
-        <button type="button" onclick="this.parentElement.remove()">Remover</button>
-    `;
-
-    container.appendChild(div);
+    container.appendChild(input);
 }
 
+
+/* ================= GERAR / ATUALIZAR CURRÍCULO ================= */
+
 function gerarCurriculo() {
+
+    /* ===== DADOS PRINCIPAIS ===== */
 
     document.getElementById("previewNome").innerText =
         document.getElementById("nome").value;
@@ -45,76 +69,124 @@ function gerarCurriculo() {
         document.getElementById("resumo").value;
 
     document.getElementById("previewInfoPessoais").innerHTML =
-    `
-    <span class="info-item">📧 ${document.getElementById("email").value}</span>
-    <span class="info-item">📱 ${document.getElementById("telefone").value}</span>
-    `;
+        `
+        <span class="info-item">📧 ${document.getElementById("email").value}</span>
+        <span class="info-item">📱 ${document.getElementById("telefone").value}</span>
+        `;
+
 
     /* ================= EXPERIÊNCIAS ================= */
 
-    let previewExp = document.getElementById("previewExperiencias");
+    const previewExp = document.getElementById("previewExperiencias");
     previewExp.innerHTML = "";
 
-    let experiencias = document.querySelectorAll(".experiencia-item");
+    const experiencias = document.querySelectorAll(".experiencia-item");
+    const anoAtual = new Date().getFullYear();
 
-    experiencias.forEach(exp => {
+    for (let exp of experiencias) {
 
-        let empresa = exp.querySelector(".empresa").value;
-        let cargo = exp.querySelector(".cargo").value;
-        let funcao = exp.querySelector(".funcao").value;
-        let periodo = exp.querySelector(".periodo").value;
+        const empresa = exp.querySelector(".empresa").value.trim();
+        const cargo = exp.querySelector(".cargo").value.trim();
+        const funcao = exp.querySelector(".funcao").value.trim();
+        const anoInicio = exp.querySelector(".anoInicio").value.trim();
+        const anoFim = exp.querySelector(".anoFim").value.trim();
 
-        if (empresa || cargo || funcao || periodo) {
-
-            let div = document.createElement("div");
-            div.style.marginBottom = "15px";
-
-            div.innerHTML = `
-                <strong>${empresa}</strong><br>
-                <b>Cargo:</b> ${cargo}<br>
-                <b>Função:</b> ${funcao}<br>
-                <b>Período:</b> ${periodo}
-            `;
-
-            previewExp.appendChild(div);
+        if (!empresa && !cargo && !funcao && !anoInicio && !anoFim) {
+            continue;
         }
-    });
+
+        /* ===== VALIDAÇÕES ===== */
+
+        if (anoInicio && anoInicio.length !== 4) {
+            alert("Ano de início deve ter 4 dígitos.");
+            return;
+        }
+
+        if (anoFim && anoFim.length !== 4) {
+            alert("Ano de fim deve ter 4 dígitos.");
+            return;
+        }
+
+        if (anoInicio && parseInt(anoInicio) > anoAtual) {
+            alert("Ano de início não pode ser maior que o ano atual.");
+            return;
+        }
+
+        if (anoFim && parseInt(anoFim) > anoAtual) {
+            alert("Ano de fim não pode ser maior que o ano atual.");
+            return;
+        }
+
+        if (anoInicio && anoFim && parseInt(anoFim) < parseInt(anoInicio)) {
+            alert("Ano de fim não pode ser menor que o ano de início.");
+            return;
+        }
+
+        let periodoFinal = "";
+
+        if (anoInicio && anoFim) {
+            periodoFinal = `${anoInicio} - ${anoFim}`;
+        } else if (anoInicio && !anoFim) {
+            periodoFinal = `${anoInicio} - Atual`;
+        }
+
+        const div = document.createElement("div");
+        div.style.marginBottom = "15px";
+
+        div.innerHTML = `
+            <strong>${empresa}</strong><br>
+            <b>Cargo:</b> ${cargo}<br>
+            <b>Função:</b> ${funcao}<br>
+            <b>Período:</b> ${periodoFinal}
+        `;
+
+        previewExp.appendChild(div);
+    }
+
 
     /* ================= HABILIDADES ================= */
 
-    let previewHab = document.getElementById("previewHabilidades");
+    const previewHab = document.getElementById("previewHabilidades");
     previewHab.innerHTML = "";
 
-    let habilidades = document.querySelectorAll(".habilidade-item");
+    const habilidades = document.querySelectorAll(".habilidade-item");
 
     habilidades.forEach(hab => {
         if (hab.value.trim() !== "") {
-            let li = document.createElement("li");
+            const li = document.createElement("li");
             li.innerText = hab.value;
             previewHab.appendChild(li);
         }
     });
 
+
     /* ================= FOTO ================= */
 
-    let inputFoto = document.getElementById("foto");
-    let previewFoto = document.getElementById("previewFoto");
-    let icone = document.getElementById("fotoIcone");
+    const inputFoto = document.getElementById("foto");
+    const previewFoto = document.getElementById("previewFoto");
+    const icone = document.getElementById("fotoIcone");
 
     if (inputFoto.files && inputFoto.files[0]) {
-        let reader = new FileReader();
+
+        const reader = new FileReader();
+
         reader.onload = function (e) {
             previewFoto.src = e.target.result;
             previewFoto.style.display = "block";
             icone.style.display = "none";
         };
+
         reader.readAsDataURL(inputFoto.files[0]);
     }
 }
 
 
-// GERAR PDF
+/* ================= GERAR PDF ================= */
+
 function gerarPDF() {
+
+    gerarCurriculo(); // Atualiza antes de gerar
+
     const element = document.querySelector(".preview");
 
     const opt = {
