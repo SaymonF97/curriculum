@@ -129,3 +129,43 @@ button {
     font-size: 60px;
     color: white;
 }
+
+/* ================= RESPONSIVIDADE ================= */
+
+@media (max-width: 900px) {
+
+    .container {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .formulario,
+    .preview {
+        width: 100%;
+        max-height: none;
+    }
+
+    .preview {
+        margin-top: 20px;
+        padding: 25px;
+    }
+
+    .foto-container {
+        margin: 0 auto 20px auto;
+    }
+
+    .preview h1,
+    .preview h3 {
+        text-align: center;
+    }
+
+    .info-item {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
